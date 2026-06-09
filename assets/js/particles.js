@@ -55,6 +55,7 @@
       canvas.style.height = h + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       seed();
+      frame();
     }
 
     function seed() {
@@ -209,5 +210,132 @@
         if (prefersReduced) f.drawOnce();
       });
     }, 200);
+  });
+})();
+
+
+/* =================================================================
+   Blueprint dot-grid — light accent bands (.section--cloud)
+   A faint precision grid; dots near the cursor warm to gold with a
+   soft glow that follows the pointer. Distinct from the constellation.
+   - Static at rest (no loop); animates only while hovered + in view
+   - Touch: static grid only. Reduced-motion: static grid, no reaction.
+   ================================================================= */
+(function () {
+  'use strict';
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+  var hosts = document.querySelectorAll('.section--cloud');
+  if (!hosts.length || !document.createElement('canvas').getContext) return;
+
+  var instances = [];
+
+  function Grid(host) {
+    var canvas = document.createElement('canvas');
+    canvas.className = 'grid-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    host.insertBefore(canvas, host.firstChild);
+
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = 0, h = 0, cols = 0, rows = 0, offx = 0, offy = 0;
+    var GAP = 36, INFLUENCE = 150;
+    var mouse = { cx: 0, cy: 0, on: false };
+    var raf = null, inView = true, tabHidden = false, running = false;
+
+    function resize() {
+      var r = host.getBoundingClientRect();
+      w = Math.max(1, Math.round(r.width));
+      h = Math.max(1, Math.round(r.height));
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cols = Math.ceil(w / GAP) + 1;
+      rows = Math.ceil(h / GAP) + 1;
+      offx = (w - (cols - 1) * GAP) / 2;
+      offy = (h - (rows - 1) * GAP) / 2;
+      draw();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      var mx = null, my = null;
+      if (mouse.on && !isTouch && !prefersReduced) {
+        var r = host.getBoundingClientRect();
+        mx = mouse.cx - r.left;
+        my = mouse.cy - r.top;
+      }
+      // soft gold glow following the cursor
+      if (mx !== null) {
+        var g = ctx.createRadialGradient(mx, my, 0, mx, my, INFLUENCE * 1.5);
+        g.addColorStop(0, 'rgba(200,147,43,0.10)');
+        g.addColorStop(1, 'rgba(200,147,43,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, w, h);
+      }
+      for (var i = 0; i < cols; i++) {
+        for (var j = 0; j < rows; j++) {
+          var x = offx + i * GAP, y = offy + j * GAP;
+          var t = 0;
+          if (mx !== null) {
+            var dx = x - mx, dy = y - my, d2 = dx * dx + dy * dy;
+            if (d2 < INFLUENCE * INFLUENCE) t = 1 - Math.sqrt(d2) / INFLUENCE;
+          }
+          // lerp slate (71,85,105) -> gold (200,147,43)
+          var R = (71 + 129 * t) | 0, G = (85 + 62 * t) | 0, B = (105 - 62 * t) | 0;
+          ctx.beginPath();
+          ctx.arc(x, y, 1.1 + 2.4 * t, 0, 6.2832);
+          ctx.fillStyle = 'rgba(' + R + ',' + G + ',' + B + ',' + (0.16 + 0.7 * t) + ')';
+          ctx.fill();
+        }
+      }
+    }
+
+    function loop() { draw(); raf = requestAnimationFrame(loop); }
+    function update() {
+      var should = mouse.on && inView && !tabHidden && !prefersReduced && !isTouch;
+      if (should && !running) { running = true; loop(); }
+      else if (!should && running) { running = false; if (raf) cancelAnimationFrame(raf); raf = null; draw(); }
+    }
+
+    if (!isTouch && !prefersReduced) {
+      host.addEventListener('mouseenter', function () { mouse.on = true; update(); });
+      host.addEventListener('mousemove', function (e) { mouse.cx = e.clientX; mouse.cy = e.clientY; if (!running) update(); });
+      host.addEventListener('mouseleave', function () { mouse.on = false; update(); });
+    }
+
+    return {
+      host: host,
+      resize: resize,
+      setInView: function (v) { inView = v; update(); },
+      setTabHidden: function (v) { tabHidden = v; update(); }
+    };
+  }
+
+  hosts.forEach(function (host) { var gf = new Grid(host); gf.resize(); instances.push(gf); });
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        for (var i = 0; i < instances.length; i++) {
+          if (instances[i].host === en.target) { instances[i].setInView(en.isIntersecting); break; }
+        }
+      });
+    }, { threshold: 0.01 });
+    hosts.forEach(function (h) { io.observe(h); });
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    instances.forEach(function (f) { f.setTabHidden(document.hidden); });
+  });
+
+  var grt;
+  window.addEventListener('resize', function () {
+    clearTimeout(grt);
+    grt = setTimeout(function () { instances.forEach(function (f) { f.resize(); }); }, 200);
   });
 })();

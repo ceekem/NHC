@@ -421,12 +421,13 @@ h1,h2,h3,h4{
 .faq__a{max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
 .faq__a p{padding:0 0 1.4rem;color:var(--slate);max-width:68ch}
 
-/* ---------- Interactive particle layer (dark sections) ---------- */
-.particles-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block}
-.hero,.page-hero,.section--ink{position:relative}
+/* ---------- Interactive canvas layers (particles + blueprint grid) ---------- */
+.particles-canvas,.grid-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block}
+.hero,.page-hero,.section--ink,.section--cloud{position:relative}
 .hero>.container,
 .page-hero>.container,
-.section--ink>.container{position:relative;z-index:2}
+.section--ink>.container,
+.section--cloud>.container{position:relative;z-index:2}
 .cta-band .eyebrow,
 .cta-band h2,
 .cta-band p,
