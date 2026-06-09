@@ -1,5 +1,5 @@
 /* =================================================================
-   NHC — Home Maintenance  |  particles.js
+   NHC — New Horizon Concepts  |  particles.js
    Lightweight interactive "constellation" network for dark sections.
    - Auto-targets: .hero, .page-hero, .section--ink, .cta-band
    - Dots drift + link to nearby dots; gold links + gentle repel near cursor
