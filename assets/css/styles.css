@@ -1,5 +1,5 @@
 /* =================================================================
-   NHC — New Horizon Concepts  |  styles.css
+   NHC — Home Maintenance  |  styles.css
    Style: Trust & Authority (premium)
    Palette: deep navy ink + brass gold accent + cool slate neutrals
    Type:  Fraunces (display) / Inter (body)
@@ -420,6 +420,17 @@ h1,h2,h3,h4{
 .faq__item.open .faq__icon{transform:rotate(45deg)}
 .faq__a{max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
 .faq__a p{padding:0 0 1.4rem;color:var(--slate);max-width:68ch}
+
+/* ---------- Interactive particle layer (dark sections) ---------- */
+.particles-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block}
+.hero,.page-hero,.section--ink{position:relative}
+.hero>.container,
+.page-hero>.container,
+.section--ink>.container{position:relative;z-index:2}
+.cta-band .eyebrow,
+.cta-band h2,
+.cta-band p,
+.cta-band__actions{position:relative;z-index:2}
 
 /* ---------- Reveal animation ---------- */
 [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:var(--d,0s)}
