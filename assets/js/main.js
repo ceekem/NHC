@@ -1,5 +1,5 @@
 /* =================================================================
-   NHC — Home Maintenance  |  main.js
+   NHC — New Horizon Concepts  |  main.js
    Nav drawer · header scroll state · scroll reveal · stat counters
    · FAQ accordion · contact form validation
    ================================================================= */
