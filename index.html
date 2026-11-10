@@ -15,9 +15,31 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <script>
+    /* Motion flags, set before first paint (see assets/js/motion.js) */
+    (function (r) {
+      var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      r.classList.add(reduce ? 'reduced' : 'motion');
+      try {
+        var c = navigator.connection;
+        if (reduce || sessionStorage.getItem('nhc-intro') || innerHeight < 520 || (c && c.saveData)) r.classList.add('no-preloader');
+      } catch (e) { r.classList.add('no-preloader'); }
+    })(document.documentElement);
+  </script>
   <noscript><style>[data-reveal]{opacity:1 !important;transform:none !important}</style></noscript>
 </head>
-<body>
+<body class="page-home">
+
+  <!-- ============ PRELOADER (counts the hero frames as they load) ============ -->
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <svg class="preloader__mark" viewBox="0 0 44 44"><rect width="44" height="44" rx="11" fill="#1E293B"/><path d="M11 23.2 22 13.5l11 9.7" fill="none" stroke="#E2A93D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 21.5v10h16v-10" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.5 31.5v-6h5v6" fill="none" stroke="#E2A93D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="preloader__count"><span data-preloader-count>0</span><small>%</small></div>
+      <div class="preloader__bar"><i data-preloader-bar></i></div>
+      <span class="preloader__label">Loading</span>
+    </div>
+  </div>
 
   <!-- ============ TOP UTILITY BAR ============ -->
   <div class="topbar">
@@ -79,28 +101,61 @@
   <div class="nav__scrim" aria-hidden="true"></div>
 
   <main>
-    <!-- ============ HERO ============ -->
-    <section class="hero">
-      <div class="hero__media">
-        <img src="assets/img/hero.jpg" alt="Modern timber and glass home illuminated at dusk" fetchpriority="high" />
-      </div>
-      <div class="container">
-        <div class="hero__inner">
-          <span class="eyebrow" data-reveal>Trusted New Horizon Concepts</span>
-          <h1 data-reveal style="--d:.05s">Premium care for <em>every corner</em> of your home</h1>
-          <p class="hero__lead" data-reveal style="--d:.12s">From a fresh coat of paint to a full rewire, NHC brings vetted craftsmen, transparent pricing and a finish you'll be proud of — across painting, plumbing, tiling and electrical.</p>
-          <div class="hero__cta" data-reveal style="--d:.18s">
-            <a class="btn btn--gold btn--lg" href="contact.html">Get a free quote
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-            </a>
-            <a class="btn btn--ghost btn--lg" href="services.html">Explore our services</a>
-          </div>
-          <div class="hero__trust" data-reveal style="--d:.24s">
-            <div class="t"><b>4.9★</b><span>Average rating</span></div>
-            <div class="t"><b>2,400+</b><span>Projects completed</span></div>
-            <div class="t"><b>12 yrs</b><span>Serving homeowners</span></div>
+    <!-- ============ HERO ============
+         Scrolling plays the dusk fly-around (97 frames, drawn on the canvas)
+         while three headlines take turns. Static poster without JS or with
+         reduced motion. Frames come from assets/videos/hero-video.mp4. -->
+    <section class="hero" id="top" data-sequence data-frames="97"
+             data-src-desktop="assets/img/hero-sequence/desktop/frame-"
+             data-src-mobile="assets/img/hero-sequence/mobile/frame-">
+      <div class="hero__sticky">
+        <div class="hero__media">
+          <div class="hero__frame">
+            <picture>
+              <source media="(orientation: portrait) and (max-width: 1024px)" srcset="assets/img/hero-sequence/mobile/frame-000.webp" />
+              <img class="hero__poster" src="assets/img/hero-sequence/desktop/frame-000.webp" alt="Modern timber and glass home with warm lights glowing at dusk" width="1920" height="1080" fetchpriority="high" />
+            </picture>
+            <canvas class="hero__canvas" aria-hidden="true"></canvas>
           </div>
         </div>
+
+        <div class="container hero__stage">
+          <!-- Scene 1: opening -->
+          <div class="hero__scene hero__inner" data-scene="1">
+            <span class="eyebrow" data-hero-fade>Trusted New Horizon Concepts</span>
+            <h1 class="anim-title">Premium care for <em>every corner</em> of your home</h1>
+            <p class="hero__lead anim-text">From a fresh coat of paint to a full rewire, NHC brings vetted craftsmen, transparent pricing and a finish you'll be proud of — across painting, plumbing, tiling and electrical.</p>
+            <div class="hero__cta" data-hero-fade>
+              <a class="btn btn--gold btn--lg btn--wave" href="contact.html">Get a free quote
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+              </a>
+              <a class="btn btn--ghost btn--lg" href="services.html">Explore our services</a>
+            </div>
+            <div class="hero__trust" data-hero-fade>
+              <div class="t"><b>4.9★</b><span>Average rating</span></div>
+              <div class="t"><b>2,400+</b><span>Projects completed</span></div>
+              <div class="t"><b>12 yrs</b><span>Serving homeowners</span></div>
+            </div>
+          </div>
+
+          <!-- Scene 2 (sequence mode only) -->
+          <div class="hero__scene hero__scene--alt" data-scene="2">
+            <p class="hero__title">Painting, plumbing, tiling <em>&amp; electrical.</em></p>
+          </div>
+
+          <!-- Scene 3 (sequence mode only) -->
+          <div class="hero__scene hero__scene--alt" data-scene="3">
+            <p class="hero__title">One trusted team, <em>start to finish.</em></p>
+            <div class="hero__cta">
+              <a class="btn btn--gold btn--lg btn--wave" href="contact.html">Get a free quote
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+              </a>
+              <a class="btn btn--ghost btn--lg" href="tel:+15550102030">Call (555) 010-2030</a>
+            </div>
+          </div>
+        </div>
+
+        <a class="hero__scroll" href="#services"><span>Scroll</span><i aria-hidden="true"></i></a>
       </div>
     </section>
 
@@ -131,10 +186,10 @@
     <!-- ============ SERVICES ============ -->
     <section class="section" id="services">
       <div class="container">
-        <div class="section-head center" data-reveal>
-          <span class="eyebrow center">What we do</span>
-          <h2>Four trades. One trusted team.</h2>
-          <p>Whether it's a single room refresh or a whole-home project, our specialists handle it end to end — so you only ever deal with one accountable team.</p>
+        <div class="section-head center">
+          <span class="eyebrow center" data-reveal>What we do</span>
+          <h2 class="anim-title">Four trades. One trusted team.</h2>
+          <p class="anim-text">Whether it's a single room refresh or a whole-home project, our specialists handle it end to end — so you only ever deal with one accountable team.</p>
         </div>
         <div class="services-grid">
           <!-- Painting -->
@@ -198,23 +253,23 @@
       <div class="container">
         <div class="split">
           <div class="split__media split__media--frame" data-reveal>
-            <img src="assets/img/craftsmanship.jpg" alt="Skilled tradesperson carefully working with professional tools" />
-            <div class="float-badge">
+            <div class="photo-frame anim-photo"><img src="assets/img/craftsmanship.jpg" alt="Skilled tradesperson carefully working with professional tools" /></div>
+            <div class="float-badge" data-depth="0.12">
               <span class="float-badge__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
               <span><b>12-Month</b><span>workmanship guarantee</span></span>
             </div>
           </div>
-          <div data-reveal style="--d:.1s">
-            <span class="eyebrow">Why NHC</span>
-            <h2 class="h-lg" style="margin-top:1rem">Craftsmanship you can count on, start to finish</h2>
-            <p style="margin-top:1.1rem">We treat your home like our own. Every NHC project is run by an accountable lead, priced up front, and finished to a standard we're happy to put our name to.</p>
-            <ul class="checklist">
+          <div>
+            <span class="eyebrow" data-reveal>Why NHC</span>
+            <h2 class="h-lg anim-title" style="margin-top:1rem">Craftsmanship you can count on, start to finish</h2>
+            <p class="anim-text" style="margin-top:1.1rem">We treat your home like our own. Every NHC project is run by an accountable lead, priced up front, and finished to a standard we're happy to put our name to.</p>
+            <ul class="checklist" data-reveal style="--d:.1s">
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Vetted, insured professionals</b> — background-checked and trade-qualified.</span></li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Transparent, fixed quotes</b> — no surprises, no hidden extras.</span></li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>On-time &amp; tidy</b> — we protect your space and clean up daily.</span></li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span><b>Guaranteed finish</b> — backed by our 12-month workmanship promise.</span></li>
             </ul>
-            <div style="margin-top:1.9rem;display:flex;gap:.9rem;flex-wrap:wrap">
+            <div style="margin-top:1.9rem;display:flex;gap:.9rem;flex-wrap:wrap;--d:.16s" data-reveal>
               <a class="btn btn--ink" href="about.html">More about us</a>
               <a class="btn btn--outline" href="contact.html">Book a visit</a>
             </div>
@@ -226,10 +281,10 @@
     <!-- ============ PROCESS ============ -->
     <section class="section">
       <div class="container">
-        <div class="section-head center" data-reveal>
-          <span class="eyebrow center">How it works</span>
-          <h2>A simple, stress-free process</h2>
-          <p>Four clear steps from first call to a finished job you'll love.</p>
+        <div class="section-head center">
+          <span class="eyebrow center" data-reveal>How it works</span>
+          <h2 class="anim-title">A simple, stress-free process</h2>
+          <p class="anim-text">Four clear steps from first call to a finished job you'll love.</p>
         </div>
         <div class="steps">
           <div class="step" data-reveal>
@@ -268,20 +323,53 @@
       </div>
     </section>
 
-    <!-- ============ GALLERY ============ -->
-    <section class="section">
+    <!-- ============ PROJECT SLIDER ============
+         Stretch-wipe transition between projects; drag/swipe, arrow keys
+         or the round buttons. Caption text comes from each slide's data-*. -->
+    <section class="section" id="work">
       <div class="container">
-        <div class="section-head center" data-reveal>
-          <span class="eyebrow center">Our work</span>
-          <h2>Recently completed projects</h2>
-          <p>A glimpse of the homes we've refreshed, repaired and transformed.</p>
+        <div class="section-head center">
+          <span class="eyebrow center" data-reveal>Our work</span>
+          <h2 class="anim-title">Recently completed projects</h2>
+          <p class="anim-text">A glimpse of the homes we've refreshed, repaired and transformed.</p>
         </div>
-        <div class="gallery">
-          <a class="gallery__item g-a" href="services.html#tiling" data-reveal><img src="assets/img/kitchen.jpg" alt="Bright modern kitchen with marble island and pendant lighting" loading="lazy" /><span class="gallery__cap">Kitchen refit · Tiling &amp; finishes</span></a>
-          <a class="gallery__item g-b" href="services.html#tiling" data-reveal style="--d:.06s"><img src="assets/img/tiling-2.jpg" alt="Contemporary bathroom with freestanding tub and tiled floor" loading="lazy" /><span class="gallery__cap">Bathroom tiling</span></a>
-          <a class="gallery__item g-c" href="services.html#painting" data-reveal style="--d:.12s"><img src="assets/img/living-scandi.jpg" alt="Cosy living room with neutral painted walls" loading="lazy" /><span class="gallery__cap">Living room repaint</span></a>
-          <a class="gallery__item g-d" href="about.html" data-reveal style="--d:.18s"><img src="assets/img/house-pool.jpg" alt="Exterior of a maintained two-storey home with pool" loading="lazy" /><span class="gallery__cap">Exterior maintenance</span></a>
-          <a class="gallery__item g-e" href="services.html#plumbing" data-reveal style="--d:.24s"><img src="assets/img/plumbing.jpg" alt="Premium chrome tap fitted in a renovated bathroom" loading="lazy" /><span class="gallery__cap">New bathroom fittings</span></a>
+        <div class="work-slider" data-slider data-reveal>
+          <div class="work-slider__viewport" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Recently completed projects. Use the arrow keys, drag, or the buttons to browse.">
+            <div class="work-slide is-active" role="group" aria-roledescription="slide" aria-label="1 of 5" data-title="Kitchen refit" data-tag="Tiling &amp; finishes" data-href="services.html#tiling" data-link="View tiling services">
+              <img src="assets/img/kitchen.jpg" alt="Bright modern kitchen with marble island and pendant lighting" width="1200" height="800" loading="lazy" decoding="async" />
+            </div>
+            <div class="work-slide" role="group" aria-roledescription="slide" aria-label="2 of 5" data-title="Bathroom tiling" data-tag="Tiling &amp; flooring" data-href="services.html#tiling" data-link="View tiling services">
+              <img src="assets/img/tiling-2.jpg" alt="Contemporary bathroom with freestanding tub and tiled floor" width="900" height="601" loading="lazy" decoding="async" />
+            </div>
+            <div class="work-slide" role="group" aria-roledescription="slide" aria-label="3 of 5" data-title="Living room repaint" data-tag="Painting &amp; decorating" data-href="services.html#painting" data-link="View painting services">
+              <img src="assets/img/living-scandi.jpg" alt="Cosy living room with neutral painted walls" width="1000" height="1500" loading="lazy" decoding="async" />
+            </div>
+            <div class="work-slide" role="group" aria-roledescription="slide" aria-label="4 of 5" data-title="Exterior maintenance" data-tag="Whole-home care" data-href="about.html" data-link="More about us">
+              <img src="assets/img/house-pool.jpg" alt="Exterior of a maintained two-storey home with pool" width="1200" height="800" loading="lazy" decoding="async" />
+            </div>
+            <div class="work-slide" role="group" aria-roledescription="slide" aria-label="5 of 5" data-title="New bathroom fittings" data-tag="Plumbing &amp; heating" data-href="services.html#plumbing" data-link="View plumbing services">
+              <img src="assets/img/plumbing.jpg" alt="Premium chrome tap fitted in a renovated bathroom" width="1100" height="733" loading="lazy" decoding="async" />
+            </div>
+          </div>
+          <div class="work-slider__bar">
+            <div class="work-slider__caption" aria-live="polite">
+              <span class="work-slider__tag" data-slide-tag>Tiling &amp; finishes</span>
+              <h3 class="work-slider__title" data-slide-title>Kitchen refit</h3>
+              <a class="link-arrow work-slider__link" data-slide-link href="services.html#tiling"><span data-slide-link-text>View tiling services</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a>
+            </div>
+            <div class="work-slider__nav">
+              <span class="work-slider__count" aria-hidden="true"><b data-slide-index>01</b> / <span data-slide-total>05</span></span>
+              <button class="wave-btn" type="button" data-slide-prev aria-label="Previous project">
+                <span class="wave-btn__rings" aria-hidden="true"><i></i><i></i><i></i></span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+              </button>
+              <button class="wave-btn" type="button" data-slide-next aria-label="Next project">
+                <span class="wave-btn__rings" aria-hidden="true"><i></i><i></i><i></i></span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -289,9 +377,9 @@
     <!-- ============ TESTIMONIALS ============ -->
     <section class="section section--cloud">
       <div class="container">
-        <div class="section-head center" data-reveal>
-          <span class="eyebrow center">Testimonials</span>
-          <h2>Homeowners love working with us</h2>
+        <div class="section-head center">
+          <span class="eyebrow center" data-reveal>Testimonials</span>
+          <h2 class="anim-title">Homeowners love working with us</h2>
         </div>
         <div class="testi-grid">
           <figure class="testi" data-reveal>
@@ -333,10 +421,10 @@
       <div class="container">
         <div class="cta-band" data-reveal>
           <span class="eyebrow center">Free, no-obligation quote</span>
-          <h2 style="margin-top:1rem">Ready to give your home the care it deserves?</h2>
-          <p>Tell us what you need and we'll get back to you within one business day with honest advice and a clear price.</p>
+          <h2 class="anim-title" style="margin-top:1rem">Ready to give your home the care it deserves?</h2>
+          <p class="anim-text">Tell us what you need and we'll get back to you within one business day with honest advice and a clear price.</p>
           <div class="cta-band__actions">
-            <a class="btn btn--gold btn--lg" href="contact.html">Get your free quote
+            <a class="btn btn--gold btn--lg btn--wave" href="contact.html">Get your free quote
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
             </a>
             <a class="btn btn--ghost btn--lg" href="tel:+15550102030">Call (555) 010-2030</a>
@@ -401,7 +489,13 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" integrity="sha384-HOvlOYPIs/zjoIkWUGXkVmXsjr8GuZLV+Q+rcPwmJOVZVpvTSXQChiN4t9Euv9Vc" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" integrity="sha384-P8VzCVnT9NBUkMrpcIZrJbA7EBjJvh/fJS6PmP+4nLIM284DtsImIv8D0fFjIkeh" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" integrity="sha384-xb96EMJeax+NLXMC88ZBa1xAeAW+kn+horHh/zFlbMLG2UPWhMJJSlv7fi57hS+Q" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js" integrity="sha384-JCMGAgtMgo/19ttIm8BSnUFxOA5KAxaKT7jZdTDtaL0df8+CHKRo9XFCmhsvUlXG" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js" integrity="sha384-FKTX0CNJ8ngN1oGMBReVu7mvjTJyjFiD5etb1NKnYxc+8eFI2O0KWnksTN+oTFcu" crossorigin="anonymous" defer></script>
   <script src="assets/js/main.js" defer></script>
   <script src="assets/js/particles.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
 </body>
 </html>

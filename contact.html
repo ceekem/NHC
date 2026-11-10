@@ -11,6 +11,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <script>
+    /* Motion flags, set before first paint (see assets/js/motion.js) */
+    (function (r) {
+      var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      r.classList.add(reduce ? 'reduced' : 'motion');
+      try {
+        var c = navigator.connection;
+        if (reduce || sessionStorage.getItem('nhc-intro') || innerHeight < 520 || (c && c.saveData)) r.classList.add('no-preloader');
+      } catch (e) { r.classList.add('no-preloader'); }
+    })(document.documentElement);
+  </script>
   <noscript><style>[data-reveal]{opacity:1 !important;transform:none !important}</style></noscript>
 </head>
 <body>
@@ -80,14 +92,14 @@
       <div class="page-hero__media"><img src="assets/img/kitchen.jpg" alt="" aria-hidden="true" /></div>
       <div class="container">
         <div class="page-hero__inner">
-          <nav class="breadcrumb" aria-label="Breadcrumb">
+          <nav class="breadcrumb" aria-label="Breadcrumb" data-hero-fade>
             <a href="index.html">Home</a>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
             <span>Contact</span>
           </nav>
-          <span class="eyebrow" style="margin-top:1rem">Get in touch</span>
-          <h1>Request your free quote</h1>
-          <p>Tell us about your project and we'll get back to you within one business day with honest advice and a clear price — no obligation.</p>
+          <span class="eyebrow" style="margin-top:1rem" data-hero-fade>Get in touch</span>
+          <h1 class="anim-title">Request your free quote</h1>
+          <p class="anim-text">Tell us about your project and we'll get back to you within one business day with honest advice and a clear price — no obligation.</p>
         </div>
       </div>
     </section>
@@ -208,9 +220,9 @@
     <!-- ============ FAQ ============ -->
     <section class="section section--cloud">
       <div class="container">
-        <div class="section-head center" data-reveal>
-          <span class="eyebrow center">Good to know</span>
-          <h2>Frequently asked questions</h2>
+        <div class="section-head center">
+          <span class="eyebrow center" data-reveal>Good to know</span>
+          <h2 class="anim-title">Frequently asked questions</h2>
         </div>
         <div class="faq mx-auto" data-reveal>
           <div class="faq__item">
@@ -303,7 +315,13 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" integrity="sha384-HOvlOYPIs/zjoIkWUGXkVmXsjr8GuZLV+Q+rcPwmJOVZVpvTSXQChiN4t9Euv9Vc" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" integrity="sha384-P8VzCVnT9NBUkMrpcIZrJbA7EBjJvh/fJS6PmP+4nLIM284DtsImIv8D0fFjIkeh" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" integrity="sha384-xb96EMJeax+NLXMC88ZBa1xAeAW+kn+horHh/zFlbMLG2UPWhMJJSlv7fi57hS+Q" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js" integrity="sha384-JCMGAgtMgo/19ttIm8BSnUFxOA5KAxaKT7jZdTDtaL0df8+CHKRo9XFCmhsvUlXG" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js" integrity="sha384-FKTX0CNJ8ngN1oGMBReVu7mvjTJyjFiD5etb1NKnYxc+8eFI2O0KWnksTN+oTFcu" crossorigin="anonymous" defer></script>
   <script src="assets/js/main.js" defer></script>
   <script src="assets/js/particles.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
 </body>
 </html>

@@ -1,7 +1,8 @@
 /* =================================================================
    NHC — New Horizon Concepts  |  particles.js
    Lightweight interactive "constellation" network for dark sections.
-   - Auto-targets: .hero, .page-hero, .section--ink, .cta-band
+   - Auto-targets: .section--ink (dark stats band). Kept off the photo
+     heroes so it doesn't compete with the hero imagery.
    - Dots drift + link to nearby dots; gold links + gentle repel near cursor
    - Capped count, retina-aware, pauses off-screen / when tab hidden
    - Lighter on touch devices; static (no motion) under prefers-reduced-motion
@@ -13,7 +14,7 @@
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
-  var hosts = document.querySelectorAll('.hero, .page-hero, .section--ink, .cta-band');
+  var hosts = document.querySelectorAll('.section--ink');
   if (!hosts.length || !document.createElement('canvas').getContext) return;
 
   var GOLD = '226,169,61';      // brand gold
